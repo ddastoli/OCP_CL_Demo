@@ -1,0 +1,57 @@
+{
+  "kind": "Deployment",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "hello-%s",
+    "creationTimestamp": null,
+    "labels": {
+      "name": "hello-%s",
+      "demoscript": "yes",
+      "owner": "ddastoli"
+    }
+  },
+  "spec": {
+    "containers": [
+      {
+        "name": "hello-%s",
+        "image": "openshift/hello-openshift",
+        "env": [
+          { "name": "RESPONSE",
+            "value": "<html><body>Hi <b>%s</b> team running on <b>Openshift 3.11</b>! How are you doing today?</body></html>"
+          }
+        ],
+        "ports": [
+          {
+            "containerPort": 8080,
+            "protocol": "TCP"
+          }
+        ],
+        "resources": {},
+        "volumeMounts": [
+          {
+            "name":"tmp",
+            "mountPath":"/tmp"
+          }
+        ],
+        "terminationMessagePath": "/dev/termination-log",
+        "imagePullPolicy": "IfNotPresent",
+        "capabilities": {},
+        "securityContext": {
+          "capabilities": {},
+          "privileged": false
+        }
+      }
+    ],
+    "volumes": [
+      {
+        "name":"tmp",
+        "emptyDir": {}
+      }
+    ],
+    "restartPolicy": "Always",
+    "dnsPolicy": "ClusterFirst",
+    "serviceAccount": ""
+  },
+  "status": {}
+}
+

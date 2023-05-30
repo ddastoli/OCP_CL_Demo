@@ -1,0 +1,35 @@
+{
+	"apiVersion": "extensions/v1beta1",
+	"kind": "Deployment",
+	"metadata": {
+		"name": "hello-%s"
+	},
+	"spec": {
+		"replicas": 1,
+		"template": {
+			"metadata": {
+				"labels": {
+					"app": "hello-%s",
+					"name": "hello-%s",
+					"demoscript": "yes",
+					"owner": "ddastoli"
+				}
+			},
+			"spec": {
+				"containers": [
+					{
+						"name": "hello-%s",
+						"image": "docker-registry.default.svc:5000/openshift/cl-ubuntu:latest",
+                                                "ports": [
+                                                        {
+                                                                "containerPort": 8088,
+                                                                "protocol": "TCP"
+                                                        }
+                                                ],
+                                                "command": ["bash", "-c", "service nginx start && service php7.2-fpm start && sleep 30d"]
+                                        }
+				]
+			}
+		}
+	}
+}

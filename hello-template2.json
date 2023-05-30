@@ -1,0 +1,82 @@
+{
+   "apiVersion":"apps/v1",
+   "kind":"Deployment",
+   "metadata":{
+      "name":"hello-%s",
+      "labels":{
+         "name":"hello-%s",
+         "demoscript":"yes",
+         "owner":"ddastoli"
+      }
+   },
+   "spec":{
+      "replicas":1,
+      "selector":{
+         "matchLabels":{
+            "app":"hello-%s",
+            "demoscript":"yes",
+            "owner":"ddastoli"
+         }
+      },
+      "template":{
+         "metadata":{
+            "labels":{
+               "app":"hello-%s",
+               "owner":"ddastoli",
+               "demoscript":"yes"
+            }
+         },
+         "spec":{
+            "containers":[
+               {
+                  "name":"hello-%s",
+                  "image":"quay.io/openshift/origin-hello-openshift",
+                  "env":[
+                     {
+                        "name":"RESPONSE",
+                        "value":"<html><body>Hi <b>%s</b> team running on <b>Openshift 4.6</b>! How are you doing today?</body></html>"
+                     }
+                  ],
+                  "ports":[
+                     {
+                        "containerPort":8080,
+                        "protocol":"TCP"
+                     }
+                  ],
+                  "resources":{
+                     
+                  },
+                  "volumeMounts":[
+                     {
+                        "name":"tmp",
+                        "mountPath":"/tmp"
+                     }
+                  ],
+                  "terminationMessagePath":"/dev/termination-log",
+                  "imagePullPolicy":"IfNotPresent",
+                  "capabilities":{
+                     
+                  },
+                  "securityContext":{
+                     "capabilities":{
+                        
+                     },
+                     "privileged":false
+                  }
+               }
+            ],
+            "volumes":[
+               {
+                  "name":"tmp",
+                  "emptyDir":{
+                     
+                  }
+               }
+            ],
+            "restartPolicy":"Always",
+            "dnsPolicy":"ClusterFirst",
+            "serviceAccount":""
+         }
+      }
+   }
+}

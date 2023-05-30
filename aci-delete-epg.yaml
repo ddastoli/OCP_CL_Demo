@@ -1,0 +1,22 @@
+---
+- name: create EPG for Openshift demo
+  hosts: apic
+  connection: local
+  vars:
+    epgName: '{{ epgName }}'
+  tasks:
+  - name: delete EPG in existing Openshift tenant
+    aci_epg:
+      hostname: 10.48.170.201
+      username: admin
+      password: ins3965!
+      tenant: openshift311
+      ap: annotated
+      epg: '{{ epgName }}'
+      description: Ansible
+      bd: kube-pod-bd
+      use_ssl: yes
+      validate_certs: no
+      use_proxy: no
+      state: absent
+

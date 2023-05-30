@@ -1,0 +1,40 @@
+{
+	"apiVersion": "extensions/v1beta1",
+	"kind": "Deployment",
+	"metadata": {
+		"name": "hello-%s"
+	},
+	"spec": {
+		"replicas": 1,
+		"template": {
+			"metadata": {
+				"labels": {
+					"app": "hello-%s",
+					"name": "hello-%s",
+					"demoscript": "yes",
+					"owner": "ddastoli"
+				}
+			},
+			"spec": {
+				"containers": [
+					{
+						"name": "hello-%s",
+						"image": "openshift/hello-openshift:latest",
+						"ports": [
+							{
+								"containerPort": 80,
+								"protocol": "TCP"
+							}
+						],
+						"env": [
+							{
+								"name": "RESPONSE",
+								"value": "<html><body>Hi <b>s</b> team running on <b>Openshift 3.11</b>! How are you doing today? <? echo $_SERVER["REMOTE_ADDR"]; ?> </body></html>"
+							}
+						]
+					}
+				]
+			}
+		}
+	}
+}

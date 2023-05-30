@@ -1,0 +1,77 @@
+---
+- name: create EPG for Openshift demo
+  hosts: apic
+  connection: local
+  vars:
+    epgName: '{{ epgName }}'
+  tasks:
+  - name: create APP in existing OpenShift tenant
+    aci_ap:
+      hostname: 10.48.170.201
+      username: admin
+      password: ins3965!
+      tenant: openshift462
+      ap: annotated
+      use_ssl: yes
+      validate_certs: no
+      use_proxy: no
+ 
+  - name: create EPG in existing Openshift tenant
+    aci_epg:
+      hostname: 10.48.170.201
+      username: admin
+      password: ins3965!
+      tenant: openshift462
+      ap: annotated
+      epg: '{{ epgName }}'
+      description: Ansible
+      bd: aci-containers-openshift462-pod-bd
+      use_ssl: yes
+      validate_certs: no
+      use_proxy: no
+
+  - name: Add a new contract to EPG binding
+    aci_epg_to_contract:
+      host: 10.48.170.201
+      username: admin
+      password: ins3965!
+      tenant: openshift462
+      ap: annotated
+      epg: '{{ epgName }}'
+      contract: '{{ item.name }}'
+      contract_type: '{{ item.status }}'
+      state: present
+      use_ssl: yes
+      validate_certs: no
+    with_items:
+      - { name: 'aci-containers-openshift462-api', status: 'consumer' }
+      - { name: 'aci-containers-openshift462-api', status: 'provider' }
+      - { name: 'aci-containers-openshift462-icmp', status: 'consumer' }
+      - { name: 'aci-containers-openshift462-dns', status: 'consumer' }
+      - { name: 'aci-containers-openshift462-health-check', status: 'provider' }
+      - { name: 'openshift462-l3out-allow-all', status: 'consumer' }
+      - { name: 'aci-containers-openshift462-istio', status: 'consumer' }
+      - { name: 'aci-containers-openshift462-prometheus-opflex-agent', status: 'consumer' }
+      - { name: 'openshift-monitoring', status: 'consumer' }
+      - { name: 'openshift-monitoring', status: 'provider' }
+      - { name: 'aci-containers-openshift462-health-check', status: 'provider' }
+      - { name: 'ocp46-462', status: 'provider' }
+      - { name: 'ocp46-462', status: 'consumer' }
+
+  - name: Bind EPGs to Domains on Cisco ACI fabrics (fv:RsDomAtt)
+    aci_epg_to_domain:
+      ap: annotated
+      domain: openshift462
+      domain_type: vmm
+      epg: '{{ epgName }}'
+      hostname: 10.48.170.201
+      password: ins3965!
+      state: present
+      tenant: openshift462
+      use_proxy: no
+      use_ssl: yes
+      username: admin
+      validate_certs: no
+      vm_provider: openshift
+
+
